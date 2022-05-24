@@ -25,3 +25,11 @@ def run_greedy(resources,numberOfBins):
    print(resourcesPerGroups)
    return groups
 
+def analysis(resources,groups,numberOfBins):
+   # the optimal average desired value 
+   idealValue = sum(resources.values()) / numberOfBins    #    11.666
+
+   # value of the groups obtained
+   realValues = [sum(group.values()) for group in groups]
+
+   return idealValue,realValues
