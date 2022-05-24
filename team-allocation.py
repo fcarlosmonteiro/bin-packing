@@ -48,3 +48,13 @@ def visualization(idealValue, realValues,numberOfBins):
    ax.set_ylabel("Weight/Value")
 
    plt.show()
+
+def main():
+   numberOfBins = int(input("Enter the number of bins: "))
+   data = create_resources()
+   groups = run_greedy(data,numberOfBins)
+   idealValue,realValues=analysis(data,groups,numberOfBins)
+   visualization(idealValue,realValues,numberOfBins)
+
+if __name__ == "__main__":
+    main()
