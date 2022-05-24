@@ -33,3 +33,18 @@ def analysis(resources,groups,numberOfBins):
    realValues = [sum(group.values()) for group in groups]
 
    return idealValue,realValues
+
+def visualization(idealValue, realValues,numberOfBins):
+   fig, ax = plt.subplots(1, 1, figsize = (16,6))
+
+   # Plots
+   ax.bar(x = range(numberOfBins), height = realValues, color="#408090")
+   ax.hlines(idealValue, -1, numberOfBins, colors="#995050", linewidths=5)
+
+   # Style
+   ax.set_xlim(-1,numberOfBins); ax.set_ylim(0,max(realValues)+2)
+   ax.set_xticklabels(" 123456 ")
+   ax.set_xlabel("Groups")
+   ax.set_ylabel("Weight/Value")
+
+   plt.show()
