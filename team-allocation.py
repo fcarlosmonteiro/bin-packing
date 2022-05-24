@@ -16,3 +16,12 @@ def create_resources():
    }
    return resources
 
+def run_greedy(resources,numberOfBins):
+   groups = binpacking.to_constant_bin_number(resources, numberOfBins)
+   print(groups)
+   
+   #print only the groups
+   resourcesPerGroups = [list(group.keys()) for group in groups]
+   print(resourcesPerGroups)
+   return groups
+
