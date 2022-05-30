@@ -27,7 +27,7 @@ def run_greedy(resources,numberOfBins):
 
 def analysis(resources,groups,numberOfBins):
    # the optimal average desired value 
-   idealValue = sum(resources.values()) / numberOfBins    #    11.666
+   idealValue = sum(resources.values()) / numberOfBins    # 
 
    # value of the groups obtained
    realValues = [sum(group.values()) for group in groups]
@@ -53,8 +53,8 @@ def main():
    numberOfBins = int(input("Enter the number of bins: "))
    data = create_resources()
    groups = run_greedy(data,numberOfBins)
-   idealValue,realValues=analysis(data,groups,numberOfBins)
-   visualization(idealValue,realValues,numberOfBins)
+   #idealValue,realValues=analysis(data,groups,numberOfBins)
+   #visualization(idealValue,realValues,numberOfBins)
 
 if __name__ == "__main__":
     main()
