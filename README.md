@@ -1,14 +1,14 @@
 # Sistema de Empacotamento Inteligente
 
-Sistema web para simulação e otimização de empacotamento de produtos, com recomendação automática de caixas e interface interativa em tempo real.
+Sistema web para simulação e otimização de empacotamento de produtos, com recomendação automática de caixas.
 
 ## Funcionalidades
 
 - Geração automática de pedidos para simulação
-- Recomendação inteligente de caixas baseada nas dimensões dos produtos
+- Recomendação de caixas baseada nas dimensões dos produtos
 - Interface em tempo real com WebSocket
 - Visualização do processo de empacotamento
-- Estatísticas detalhadas do processamento
+- Estatísticas do processamento
 - Sistema de aprovação/rejeição de recomendações
 
 ## Tecnologias Utilizadas
