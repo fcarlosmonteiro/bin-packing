@@ -2,7 +2,7 @@
 
 Sistema web para simulação e otimização de empacotamento de produtos, com recomendação automática de caixas e interface interativa em tempo real.
 
-## 🚀 Funcionalidades
+## Funcionalidades
 
 - Geração automática de pedidos para simulação
 - Recomendação inteligente de caixas baseada nas dimensões dos produtos
@@ -11,7 +11,7 @@ Sistema web para simulação e otimização de empacotamento de produtos, com re
 - Estatísticas detalhadas do processamento
 - Sistema de aprovação/rejeição de recomendações
 
-## 🛠️ Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 ### Backend
 - Python 3.8+
@@ -26,7 +26,7 @@ Sistema web para simulação e otimização de empacotamento de produtos, com re
 - Bootstrap 5
 - Font Awesome
 
-## 🚦 Como Executar
+## Como Executar
 
 ### Backend
 
@@ -38,7 +38,7 @@ Sistema web para simulação e otimização de empacotamento de produtos, com re
 
 2. Inicie o servidor:
 ```sh
-python app.py
+python3 app.py
 ```
 O servidor será iniciado em `http://localhost:5001`
 
@@ -47,9 +47,8 @@ O servidor será iniciado em `http://localhost:5001`
 
 1. Instale um servidor local:
    ```sh
-   # Usando Python 3
-   python -m http.server 8000
-```
+   python3 -m http.server 8000
+   ```
 
 2. Acesse o sistema em seu navegador:
    - Abra `http://localhost:8000/frontend`
