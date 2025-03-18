@@ -1,0 +1,21 @@
+projeto/
+├── backend/
+│   ├── __init__.py
+│   ├── app.py
+│   ├── simulation/
+│   │   ├── __init__.py
+│   │   ├── order_generator.py
+│   │   └── packing_simulator.py
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── box.py
+│   │   ├── item.py
+│   │   └── order.py
+│   └── requirements.txt
+├── frontend/
+│   ├── index.html
+│   ├── assets/
+│   │   └── style.css
+│   └── js/
+│       └── app.js
+└── README.md 

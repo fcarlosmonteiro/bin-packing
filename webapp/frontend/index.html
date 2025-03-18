@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Empacotamento</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="./assets/style.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
+</head>
+<body class="bg-light">
+    <div id="app">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+            <div class="container-fluid">
+                <span class="navbar-brand mb-0 h1">
+                    <i class="fas fa-box-open me-2"></i>
+                    Sistema de Empacotamento
+                </span>
+                <button class="btn btn-success" @click="generateOrders" :disabled="hasActiveOrders">
+                    <i class="fas fa-plus me-2"></i>
+                    Novo Lote de Pedidos
+                </button>
+            </div>
+        </nav>
+
+        <!-- Área Principal -->
+        <div class="container main-container">
+            <!-- Área de Processamento -->
+            <div v-if="currentOrder">
+                <div class="row">
+                    <!-- Produto Atual -->
+                    <div class="col-md-6">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-white border-bottom-0">
+                                <h5>Produto a Embalar</h5>
+                            </div>
+                            <div class="card-body text-center">
+                                <div class="product-container mb-4">
+                                    <img :src="currentOrder.items[0].image_url" class="product-image">
+                                </div>
+                                <h5>{{ currentOrder.items[0].name }}</h5>
+                                <p class="dimensions text-muted">
+                                    <i class="fas fa-ruler-combined me-2"></i>
+                                    Dimensões: {{ currentOrder.items[0].width }}x{{ currentOrder.items[0].height }}x{{ currentOrder.items[0].depth }}cm
+                                    <br>
+                                    <i class="fas fa-weight-hanging me-2"></i>
+                                    Peso: {{ currentOrder.items[0].weight }}g
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Caixa Recomendada -->
+                    <div class="col-md-6" v-if="currentOrder.recommended_box">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-white border-bottom-0">
+                                <h5>Caixa Recomendada</h5>
+                            </div>
+                            <div class="card-body text-center">
+                                <div class="image-container">
+                                    <img :src="currentOrder.recommended_box.image_url" class="box-image mb-3">
+                                </div>
+                                <h5>{{ currentOrder.recommended_box.name }}</h5>
+                                <p class="dimensions text-muted">
+                                    <i class="fas fa-box me-2"></i>
+                                    Dimensões: {{ currentOrder.recommended_box.width }}x{{ currentOrder.recommended_box.height }}x{{ currentOrder.recommended_box.depth }}cm
+                                    <br>
+                                    <i class="fas fa-weight-hanging me-2"></i>
+                                    Capacidade: {{ currentOrder.recommended_box.max_weight }}g
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ações -->
+                <div class="actions-container mt-4">
+                    <button class="btn-action btn-accept" @click="acceptRecommendation(currentOrder.id)">
+                        <i class="fas fa-check"></i>
+                    </button>
+                    <button class="btn-action btn-reject" @click="rejectRecommendation(currentOrder.id)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Área de Estatísticas Finais -->
+            <div v-if="!currentOrder && totalOrders > 0" class="final-stats-area">
+                <div class="text-center mb-4">
+                    <h3 class="text-primary">
+                        <i class="fas fa-chart-pie me-2"></i>
+                        Estatísticas Finais do Lote
+                    </h3>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <i class="fas fa-boxes text-primary"></i>
+                        <h3>{{ finalStats.total }}</h3>
+                        <p>Total de Pedidos</p>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <h3>{{ finalStats.dispatched }}</h3>
+                        <p>Despachados</p>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-clock text-warning"></i>
+                        <h3>{{ finalStats.pending }}</h3>
+                        <p>Pendentes</p>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-times-circle text-danger"></i>
+                        <h3>{{ finalStats.no_box }}</h3>
+                        <p>Sem caixa disponível</p>
+                    </div>
+                </div>
+                
+                <div class="boxes-used mt-5">
+                    <h4 class="text-primary mb-4">Caixas Utilizadas</h4>
+                    <div class="box-stats-container">
+                        <div class="box-stat">
+                            <span class="box-label">Pequenas</span>
+                            <div class="box-bar">
+                                <div class="box-progress" :style="{ width: getBoxPercentage('Caixa Pequena') + '%' }"></div>
+                            </div>
+                            <span class="box-value">{{ finalStats.boxesUsed['Caixa Pequena'] }}</span>
+                        </div>
+                        <div class="box-stat">
+                            <span class="box-label">Médias</span>
+                            <div class="box-bar">
+                                <div class="box-progress" :style="{ width: getBoxPercentage('Caixa Média') + '%' }"></div>
+                            </div>
+                            <span class="box-value">{{ finalStats.boxesUsed['Caixa Média'] }}</span>
+                        </div>
+                        <div class="box-stat">
+                            <span class="box-label">Grandes</span>
+                            <div class="box-bar">
+                                <div class="box-progress" :style="{ width: getBoxPercentage('Caixa Grande') + '%' }"></div>
+                            </div>
+                            <span class="box-value">{{ finalStats.boxesUsed['Caixa Grande'] }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status do Lote -->
+        <div class="status-bar">
+            <div class="row mb-3">
+                <div class="col">
+                    <h5 class="text-primary">
+                        <i class="fas fa-chart-bar me-2"></i>
+                        Estatísticas do Lote
+                    </h5>
+                    <div class="d-flex justify-content-between">
+                        <div class="stat-box">
+                            <i class="fas fa-box-open text-primary me-2"></i>
+                            <strong>Caixas Pequenas:</strong> {{ statistics.boxesUsed['Caixa Pequena'] }}
+                        </div>
+                        <div class="stat-box">
+                            <i class="fas fa-box text-primary me-2"></i>
+                            <strong>Caixas Médias:</strong> {{ statistics.boxesUsed['Caixa Média'] }}
+                        </div>
+                        <div class="stat-box">
+                            <i class="fas fa-boxes text-primary me-2"></i>
+                            <strong>Caixas Grandes:</strong> {{ statistics.boxesUsed['Caixa Grande'] }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="progress rounded-pill">
+                <div class="progress-bar" :style="{ width: progressPercentage + '%' }">
+                    {{ completedOrders }}/{{ totalOrders }} pedidos processados
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./js/app.js"></script>
+</body>
+</html> 
