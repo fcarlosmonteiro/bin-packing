@@ -1,7 +1,7 @@
 import simpy
 from typing import List, Optional, Callable
-from ..models.box import Box
-from ..models.order import Order
+from backend.models.box import Box
+from backend.models.order import Order
 
 class PackingSimulator:
     # Tempos de processamento em minutos

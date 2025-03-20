@@ -1,8 +1,8 @@
 from flask import Flask, jsonify, request
 from flask_socketio import SocketIO, emit
 from threading import Thread
-from .simulation.order_generator import OrderGenerator
-from .simulation.packing_simulator import PackingSimulator
+from backend.simulation.order_generator import OrderGenerator
+from backend.simulation.packing_simulator import PackingSimulator
 from flask_cors import CORS
 
 app = Flask(__name__)

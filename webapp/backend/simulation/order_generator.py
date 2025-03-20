@@ -1,8 +1,8 @@
 import random
 from typing import List
 from uuid import uuid4
-from ..models.item import Item
-from ..models.order import Order
+from backend.models.item import Item
+from backend.models.order import Order
 
 class OrderGenerator:
     def __init__(self):
